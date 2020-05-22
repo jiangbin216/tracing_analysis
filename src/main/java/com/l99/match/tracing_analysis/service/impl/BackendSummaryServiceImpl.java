@@ -37,7 +37,7 @@ public class BackendSummaryServiceImpl implements IBackendSummaryService {
     }
 
     @Override
-    public CommonResult collect(List<String> datas, String sourcePort) {
+    public CommonResult collect(List<String> datas) {
         if (datas == null || datas.isEmpty()) {
             log.warn("no error span");
             return CommonResult.success();
@@ -45,19 +45,19 @@ public class BackendSummaryServiceImpl implements IBackendSummaryService {
 
         String traceId = datas.get(0).split(DataSourceConstant.SPLIT)[0];
         ErrorSpanHolder.putAll(traceId, datas);
-        // 获取另一台机器的数据
-        String anotherClientPort;
-        if (DataSourceConstant.CLIENT_PROCESS_PORT1.equals(sourcePort)) {
-            anotherClientPort = DataSourceConstant.CLIENT_PROCESS_PORT2;
-        } else {
-            anotherClientPort = DataSourceConstant.CLIENT_PROCESS_PORT1;
-        }
-        log.info("receive error traceId: " + traceId + "from port: " + sourcePort + ",now require all span from another port: " + anotherClientPort);
-        CommonResult commonResult = WebUtils.get(String.format("http://localhost:%s/filter/%s", anotherClientPort, traceId), CommonResult.class);
-        if (commonResult.getData() != null) {
-            log.info("receive span from anotherPort: " + anotherClientPort + ",the span list:\n" + JSONObject.toJSONString(commonResult.getData()));
-            ErrorSpanHolder.putAll(traceId, (List<String>) commonResult.getData());
-        }
+//        // 获取另一台机器的数据
+//        String anotherClientPort;
+//        if (DataSourceConstant.CLIENT_PROCESS_PORT1.equals(sourcePort)) {
+//            anotherClientPort = DataSourceConstant.CLIENT_PROCESS_PORT2;
+//        } else {
+//            anotherClientPort = DataSourceConstant.CLIENT_PROCESS_PORT1;
+//        }
+//        log.info("receive error traceId: " + traceId + "from port: " + sourcePort + ",now require all span from another port: " + anotherClientPort);
+//        CommonResult commonResult = WebUtils.get(String.format("http://localhost:%s/filter/%s", anotherClientPort, traceId), CommonResult.class);
+//        if (commonResult.getData() != null) {
+//            log.info("receive span from anotherPort: " + anotherClientPort + ",the span list:\n" + JSONObject.toJSONString(commonResult.getData()));
+//            ErrorSpanHolder.putAll(traceId, (List<String>) commonResult.getData());
+//        }
         return CommonResult.success();
     }
 }

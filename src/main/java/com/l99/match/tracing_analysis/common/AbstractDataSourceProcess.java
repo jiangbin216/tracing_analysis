@@ -56,7 +56,6 @@ public abstract class AbstractDataSourceProcess {
     }
 
     public void sendData(String spanJsonString) {
-        String url = String.format(DataSourceConstant.SUMMARY_ADDRESS, DataSourceUtils.getCurrentPort());
-        WebUtils.postJsonData(url, spanJsonString, CommonResult.class);
+        WebUtils.postJsonData(DataSourceConstant.SUMMARY_ADDRESS, spanJsonString, CommonResult.class);
     }
 }

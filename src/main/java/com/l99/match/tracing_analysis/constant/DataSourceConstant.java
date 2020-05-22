@@ -16,7 +16,7 @@ public class DataSourceConstant {
 
     public static final String FINISHED_ADDRESS = "http://localhost:%s/api/finished";
 
-    public static final String SUMMARY_ADDRESS = "http://localhost:" + BACKEND_PROCESS_PORT1 + "/data?sourcePort=%s";
+    public static final String SUMMARY_ADDRESS = "http://localhost:" + BACKEND_PROCESS_PORT1 + "/data";
 
     public static final String FILTER_TAGS_1 = "http.status_code=200";
 

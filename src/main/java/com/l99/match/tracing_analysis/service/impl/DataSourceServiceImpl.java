@@ -15,7 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +38,14 @@ public class DataSourceServiceImpl implements IDataSourceService {
     public void aggregateDataAndUpload() {
         // merge error span
         Map<String, Set<String>> errorSpanMap = ErrorSpanHolder.getAll();
+
+        // get all span from client
+        Set<String> traceIdList = errorSpanMap.keySet();
+        String traceIds = JSONObject.toJSONString(traceIdList);
+        getErrorSpan(traceIds);
+
         Map<String, String> TRACE_CHUCKSUM_MAP = new ConcurrentHashMap<>();
+        errorSpanMap = ErrorSpanHolder.getAll();
         for (Map.Entry<String, Set<String>> entry : errorSpanMap.entrySet()) {
             String traceId = entry.getKey();
             Set<String> spanSet = entry.getValue();
@@ -57,6 +64,25 @@ public class DataSourceServiceImpl implements IDataSourceService {
         // send result
         WebUtils.postData(String.format(DataSourceConstant.FINISHED_ADDRESS, DataSourceUtils.dataSourcePort), resultMap, String.class);
     }
+
+
+    private void getErrorSpan(String traceIds) {
+        CommonResult commonResult1 = WebUtils.postJsonData(String.format("http://localhost:%s/filter", DataSourceConstant.CLIENT_PROCESS_PORT1), traceIds, CommonResult.class);
+        CommonResult commonResult2 = WebUtils.postJsonData(String.format("http://localhost:%s/filter", DataSourceConstant.CLIENT_PROCESS_PORT2), traceIds, CommonResult.class);
+        if (commonResult1.getData() != null) {
+            putErrorSpan((Map<String, List<String>>) commonResult1.getData());
+        }
+        if (commonResult2.getData() != null) {
+            putErrorSpan((Map<String, List<String>>) commonResult2.getData());
+        }
+    }
+
+    private void putErrorSpan(Map<String, List<String>> spanMap) {
+        for (Map.Entry<String, List<String>> entry : spanMap.entrySet()) {
+            ErrorSpanHolder.putAll(entry.getKey(), entry.getValue());
+        }
+    }
+
 
     private static long getStartTime(String span) {
         if (span != null) {

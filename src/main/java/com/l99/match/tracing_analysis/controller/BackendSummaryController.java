@@ -22,9 +22,9 @@ public class BackendSummaryController {
     IBackendSummaryService summaryService;
 
     @PostMapping("/data")
-    public Object collectTraceId(@RequestBody List<String> datas, @RequestParam String sourcePort) {
+    public Object collectTraceId(@RequestBody List<String> datas) {
         log.info(String.format("collectTraceId had called,traceIdList: %s", JSONObject.toJSONString(datas)));
-        return summaryService.collect(datas,sourcePort);
+        return summaryService.collect(datas);
     }
 
     @GetMapping("/finish")

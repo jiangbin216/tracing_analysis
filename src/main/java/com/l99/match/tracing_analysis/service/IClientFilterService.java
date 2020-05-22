@@ -1,11 +1,12 @@
 package com.l99.match.tracing_analysis.service;
 
 import com.l99.match.tracing_analysis.common.CommonResult;
-import com.l99.match.tracing_analysis.pojo.Port;
+
+import java.util.List;
 
 public interface IClientFilterService {
 
     CommonResult process();
 
-    CommonResult searchSpan(String traceId);
+    CommonResult searchSpan(List<String> traceId);
 }

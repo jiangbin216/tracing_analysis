@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 数据过滤
  */
@@ -27,8 +29,8 @@ public class ClientFilterController {
     /**
      * 接收后台汇总的traceId，发送本地存在的缓存
      */
-    @GetMapping("/filter/{traceId}")
-    public Object getSpan(@PathVariable String traceId) {
+    @PostMapping("/filter")
+    public Object getSpan(@RequestBody List<String> traceId) {
         log.info("traceId: " + traceId);
         return filterService.searchSpan(traceId);
     }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IBackendSummaryService {
 
-    CommonResult collect(List<String> datas,String sourcePort);
+    CommonResult collect(List<String> datas);
 
     CommonResult finished();
 }

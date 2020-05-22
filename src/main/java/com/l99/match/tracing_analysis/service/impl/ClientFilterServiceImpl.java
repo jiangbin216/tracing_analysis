@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -28,11 +31,13 @@ public class ClientFilterServiceImpl implements IClientFilterService {
     }
 
     @Override
-    public CommonResult searchSpan(String traceId) {
-        // add error span traceId to cache
-        DataSourceHolder.addFilterTraceIdSet(traceId);
+    public CommonResult searchSpan(List<String> traceId) {
         // send error span and remove from cache
-        Set<String> spanSet = DataSourceHolder.removeHolder(traceId);
-        return CommonResult.success(spanSet);
+        Map<String, Set<String>> result = new HashMap<>();
+        for (String trace : traceId) {
+            Set<String> spanSet = DataSourceHolder.removeHolder(trace);
+            result.put(trace, spanSet);
+        }
+        return CommonResult.success(result);
     }
 }
