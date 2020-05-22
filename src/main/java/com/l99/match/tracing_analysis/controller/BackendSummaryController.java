@@ -1,7 +1,5 @@
 package com.l99.match.tracing_analysis.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.l99.match.tracing_analysis.common.CommonResult;
 import com.l99.match.tracing_analysis.service.IBackendSummaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,7 @@ public class BackendSummaryController {
 
     @PostMapping("/data")
     public Object collectTraceId(@RequestBody List<String> datas) {
-        log.info(String.format("collectTraceId had called,traceIdList: %s", JSONObject.toJSONString(datas)));
+        // log.info(String.format("collectTraceId had called,traceIdList: %s", JSONObject.toJSONString(datas)));
         return summaryService.collect(datas);
     }
 

@@ -30,8 +30,9 @@ public class TestDataSourceProcess extends AbstractDataSourceProcess {
         log.info("filePath: " + filePath);
         try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
             String line;
+            int count = 1;
             while ((line = bf.readLine()) != null) {
-                executor.execute(new FilterDataTask(line));
+                executor.execute(new FilterDataTask(line, count++));
                 // filterData(line);
             }
             executor.shutdown();

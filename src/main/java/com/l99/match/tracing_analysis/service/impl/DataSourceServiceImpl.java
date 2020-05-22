@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.l99.match.tracing_analysis.common.*;
 import com.l99.match.tracing_analysis.constant.DataSourceConstant;
 import com.l99.match.tracing_analysis.service.IDataSourceService;
-import com.l99.match.tracing_analysis.service.IClientFilterService;
 import com.l99.match.tracing_analysis.utils.DataSourceUtils;
 import com.l99.match.tracing_analysis.utils.WebUtils;
 import org.slf4j.Logger;
@@ -54,13 +53,13 @@ public class DataSourceServiceImpl implements IDataSourceService {
                     Comparator.comparing(DataSourceServiceImpl::getStartTime)).collect(Collectors.joining("\n"));
             spans = spans + "\n";
             // output all span to check
-            log.info("traceId: " + traceId + ",value:\n" + spans);
+            //log.info("traceId: " + traceId + ",value:\n" + spans);
             TRACE_CHUCKSUM_MAP.put(traceId, DataSourceUtils.MD5(spans));
         }
         String result = JSONObject.toJSONString(TRACE_CHUCKSUM_MAP);
         MultiValueMap<String, String> resultMap = new LinkedMultiValueMap<>(2);
         resultMap.add("result", result);
-        log.info("ready send result: " + result);
+        //log.info("ready send result: " + result);
         // send result
         WebUtils.postData(String.format(DataSourceConstant.FINISHED_ADDRESS, DataSourceUtils.dataSourcePort), resultMap, String.class);
     }

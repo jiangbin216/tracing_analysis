@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 public class FilterDataTask implements Runnable {
 
@@ -19,8 +18,11 @@ public class FilterDataTask implements Runnable {
 
     public String span;
 
-    public FilterDataTask(String span) {
+    public int count;
+
+    public FilterDataTask(String span, int count) {
         this.span = span;
+        this.count = count;
     }
 
     @Override
