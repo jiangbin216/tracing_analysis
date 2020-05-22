@@ -1,18 +1,20 @@
 package com.l99.match.tracing_analysis.common;
 
 import com.l99.match.tracing_analysis.constant.DataSourceConstant;
-import com.l99.match.tracing_analysis.utils.DataSourceUtils;
+import com.l99.match.tracing_analysis.task.FilterDataTask;
 import com.l99.match.tracing_analysis.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.concurrent.*;
 
 public class TestDataSourceProcess extends AbstractDataSourceProcess {
 
     private static final Logger log = LoggerFactory.getLogger(TestDataSourceProcess.class);
+
+    private ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.MILLISECONDS,
+            new LinkedBlockingDeque<>());
 
     @Override
     public void getData() {
@@ -29,10 +31,17 @@ public class TestDataSourceProcess extends AbstractDataSourceProcess {
         try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = bf.readLine()) != null) {
-                filterData(line);
+                executor.execute(new FilterDataTask(line));
+                // filterData(line);
             }
-            log.info("call finish");
-            WebUtils.get("http://localhost:8002/finish", CommonResult.class);
+            executor.shutdown();
+            while (true) {
+                if (executor.isTerminated()) {
+                    log.info("call finish");
+                    WebUtils.get("http://localhost:8002/finish", CommonResult.class);
+                    break;
+                }
+            }
         } catch (IOException e) {
 
         }

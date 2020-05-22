@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataSourceHolder {
 
     // key 为 traceId，value 为对应的 span
-    private static Map<String, Set<String>> holder = new HashMap<>();
+    private static Map<String, Set<String>> holder = new ConcurrentHashMap<>();
 
 
     // 存储待过滤的 traceId
