@@ -31,7 +31,7 @@ public class DataSourceProcess extends AbstractDataSourceProcess {
         String line;
         try {
             while ((line = bf.readLine()) != null) {
-                filterData(line);
+                filterData(line, 0);
             }
         } catch (IOException e) {
             log.warn("fail to process data", e);

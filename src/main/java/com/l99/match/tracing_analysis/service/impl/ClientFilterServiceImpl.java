@@ -38,6 +38,8 @@ public class ClientFilterServiceImpl implements IClientFilterService {
             Set<String> spanSet = DataSourceHolder.removeHolder(trace);
             result.put(trace, spanSet);
         }
+        log.info("clean cache");
+        DataSourceHolder.clean();
         return CommonResult.success(result);
     }
 }

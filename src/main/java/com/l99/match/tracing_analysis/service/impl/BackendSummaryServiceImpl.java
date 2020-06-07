@@ -43,8 +43,12 @@ public class BackendSummaryServiceImpl implements IBackendSummaryService {
             return CommonResult.success();
         }
 
-        String traceId = datas.get(0).split(DataSourceConstant.SPLIT)[0];
-        ErrorSpanHolder.putAll(traceId, datas);
+        datas.stream().forEach(span -> {
+            String traceId = span.split(DataSourceConstant.SPLIT)[0];
+            ErrorSpanHolder.put(traceId, span);
+        });
+//        String traceId = datas.get(0).split(DataSourceConstant.SPLIT)[0];
+//        ErrorSpanHolder.putAll(traceId, datas);
 //        // 获取另一台机器的数据
 //        String anotherClientPort;
 //        if (DataSourceConstant.CLIENT_PROCESS_PORT1.equals(sourcePort)) {

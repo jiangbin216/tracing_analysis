@@ -1,9 +1,6 @@
 package com.l99.match.tracing_analysis.common;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DataSourceHolder {
 
@@ -14,6 +11,7 @@ public class DataSourceHolder {
     // 存储待过滤的 traceId
     private static Set<String> filterTraceIdSet = new HashSet<>();
 
+    public static List<String> filterList = new LinkedList<>();
 
     public static Set<String> getHolder(String key) {
         return holder.get(key);
@@ -45,5 +43,11 @@ public class DataSourceHolder {
 
     public static boolean containedByFilterTraceIdSet(String key) {
         return filterTraceIdSet.contains(key);
+    }
+
+    public static void clean(){
+        holder.clear();
+        filterTraceIdSet.clear();
+        filterList.clear();
     }
 }

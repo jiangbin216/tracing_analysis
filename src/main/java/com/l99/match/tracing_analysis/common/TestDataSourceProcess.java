@@ -1,5 +1,6 @@
 package com.l99.match.tracing_analysis.common;
 
+import com.alibaba.fastjson.JSONObject;
 import com.l99.match.tracing_analysis.constant.DataSourceConstant;
 import com.l99.match.tracing_analysis.utils.DataSourceUtils;
 import com.l99.match.tracing_analysis.utils.WebUtils;
@@ -28,9 +29,18 @@ public class TestDataSourceProcess extends AbstractDataSourceProcess {
         log.info("filePath: " + filePath);
         try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
             String line;
+            int count = 1;
             while ((line = bf.readLine()) != null) {
-                filterData(line);
+                filterData(line, count++);
             }
+
+            if (!DataSourceHolder.filterList.isEmpty()) {
+                String result = JSONObject.toJSONString(DataSourceHolder.filterList);
+                DataSourceHolder.filterList.clear();
+                log.info("error span:\n" + result);
+                sendData(result);
+            }
+
             log.info("call finish");
             WebUtils.get("http://localhost:8002/finish", CommonResult.class);
         } catch (IOException e) {
